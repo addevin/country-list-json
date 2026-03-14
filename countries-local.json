@@ -23,7 +23,7 @@
     "name": "Afghanistan",
     "dial_code": "+93",
     "code": "AF",
-    "flage_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_the_Taliban.svg/320px-Flag_of_the_Taliban.svg.png",
+    "flage_url": "country-flag/af.png",
     "length": {
       "max": 9,
       "min": 9
