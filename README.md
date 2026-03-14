@@ -1,22 +1,23 @@
 # country-flag
 
-Country metadata dataset with flag image references and local flag assets.
+Country metadata datasets with dial codes, phone length rules, and flag image paths for local assets or CDN usage.
 
 ## What this project contains
 
 This folder provides:
 
-- a country list with dial codes and phone number length rules
-- a version that points to remote flag CDN URLs
-- a version that points to local flag image files
+- a local dataset that points to bundled flag PNG files
+- a CDN dataset for `flagcdn.com`
+- a CDN dataset for `addevin.github.io`
 - a local `country-flag/` image directory containing country flag PNGs
 
 ## Project structure
 
 ```text
 country-flag/
-├─ countries.json
 ├─ countries-local.json
+├─ countries-cdn1.json
+├─ countries-cdn2.json
 ├─ country-flag/
 │  ├─ ad.png
 │  ├─ ae.png
@@ -25,39 +26,11 @@ country-flag/
 └─ README.md
 ```
 
-## Files
-
-### `countries.json`
-
-Primary dataset using remote flag image URLs.
-
-Each item includes:
-
-- `name` - country name
-- `dial_code` - international calling code
-- `code` - ISO-style 2-letter country code
-- `flage_url` - remote image URL
-- `length.min` - minimum phone number length
-- `length.max` - maximum phone number length
-
-Example:
-
-```json
-{
-  "name": "United States",
-  "dial_code": "+1",
-  "code": "US",
-  "flage_url": "https://flagcdn.com/w320/us.png",
-  "length": {
-    "min": 10,
-    "max": 10
-  }
-}
-```
+## Dataset files
 
 ### `countries-local.json`
 
-Same country dataset, but `flage_url` values point to local files instead of external CDN URLs.
+Uses local flag image paths.
 
 Example:
 
@@ -66,7 +39,7 @@ Example:
   "name": "United States",
   "dial_code": "+1",
   "code": "US",
-  "flage_url": "country-flag/us.png",
+  "flag_url": "country-flag/us.png",
   "length": {
     "min": 10,
     "max": 10
@@ -74,9 +47,72 @@ Example:
 }
 ```
 
+### `countries-cdn1.json`
+
+Uses `flagcdn.com` image URLs.
+
+URL pattern:
+
+```text
+https://flagcdn.com/w320/us.png
+```
+
+Example:
+
+```json
+{
+  "name": "United States",
+  "dial_code": "+1",
+  "code": "US",
+  "flag_url": "https://flagcdn.com/w320/us.png",
+  "length": {
+    "min": 10,
+    "max": 10
+  }
+}
+```
+
+### `countries-cdn2.json`
+
+Uses `addevin.github.io` image URLs.
+
+URL pattern:
+
+```text
+https://addevin.github.io/country-list-json/country-flag/us.png
+```
+
+Example:
+
+```json
+{
+  "name": "United States",
+  "dial_code": "+1",
+  "code": "US",
+  "flag_url": "https://addevin.github.io/country-list-json/country-flag/us.png",
+  "length": {
+    "min": 10,
+    "max": 10
+  }
+}
+```
+
+## Data shape
+
+Each country item includes:
+
+- `name` - country name
+- `dial_code` - international calling code
+- `code` - 2-letter country code
+- `flag_url` - local image path or remote image URL
+- `length.min` - minimum phone number length
+- `length.max` - maximum phone number length
+
+## Local asset folder
+
 ### `country-flag/`
 
-Local PNG flag assets keyed by country code in lowercase.
+Contains local PNG flag assets keyed by lowercase country code.
 
 Examples:
 
@@ -84,50 +120,47 @@ Examples:
 - `country-flag/in.png`
 - `country-flag/gb.png`
 
-## Use cases
+## Which file should you use?
 
-- country selector dropdowns
-- phone number input components
-- signup forms with country code picker
-- offline/local flag rendering
-- replacing remote flag URLs with local assets
+Choose based on where you want the flag images to load from:
 
-## Local vs remote dataset
+### `countries-local.json`
 
-Use `countries.json` when:
+Use this if your app will use the local PNG files included in this repository.
 
-- you want to load flags from CDN
-- you do not want to store image assets in your app
+- you want bundled local assets
+- you want to avoid external image requests
+- you need predictable offline or self-hosted behavior
 
-Alternative CDN patterns:
+### `countries-cdn1.json`
 
-- `https://addevin.github.io/country-list-json/country-flag/us.png`
-- `https://flagcdn.com/w320/us.png`
+Use this if your app should load flags from FlagCDN.
 
-Replace `us` with the lowercase 2-letter country code you need.
+- you want `https://flagcdn.com/w320/<code>.png`
+- you do not want to bundle local image files
 
-Use `countries-local.json` when:
+### `countries-cdn2.json`
 
-- you want local image files
-- you need more predictable asset delivery
-- you want to avoid runtime dependency on external image URLs
+Use this if your app should load flags from the GitHub Pages CDN version.
+
+- you want `https://addevin.github.io/country-list-json/country-flag/<code>.png`
+- you do not want to bundle local image files
 
 ## Notes
 
-- The property name is `flage_url`, not `flag_url`.
 - The local image folder is named `country-flag/` inside the project root.
-- Country records also include phone length rules, which are useful for input validation.
+- Country records include phone length rules, useful for form validation and country pickers.
 
-## Typical integration example
+## Typical usage example
 
 ```js
 import countries from './countries-local.json';
 
-const india = countries.find((item) => item.code === 'IN');
+const india = countries.find((item) => item.code === 'US');
 
 console.log(india.name);
 console.log(india.dial_code);
-console.log(india.flage_url);
+console.log(india.flag_url);
 console.log(india.length.min, india.length.max);
 ```
 
@@ -139,3 +172,7 @@ This project is a reusable country data pack for apps that need:
 - dial codes
 - flag images
 - phone number length metadata
+
+## View all flags
+
+<a href="https://addevin.github.io/country-list-json/" target="_blank" rel="noopener noreferrer">View all the flags</a>
