@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Country Flags</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mt-2">Local country flags</h1>
+      <p class="text-slate-400 mt-2"><code class="text-sky-200">countries-local.json</code>.</p>
+    </header>
+
+    <div id="status" class="mb-6 text-sm text-slate-400">Loading countries...</div>
+    <div id="list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+  </main>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const listEl = document.getElementById('list');
+
+    const renderCountries = (countries) => {
+      listEl.innerHTML = '';
+
+      countries.forEach((country) => {
+        const card = document.createElement('article');
+        card.className = 'rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg';
+
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-4';
+
+        const img = document.createElement('img');
+        img.src = country.flage_url;
+        img.alt = `${country.name} flag`;
+        img.className = 'h-12 w-16 rounded-md border border-slate-700 bg-slate-800 object-cover shrink-0';
+        img.loading = 'lazy';
+
+        const content = document.createElement('div');
+        content.className = 'min-w-0';
+
+        const name = document.createElement('h2');
+        name.className = 'text-base font-semibold text-slate-100';
+        name.textContent = country.name;
+
+        const dialCode = document.createElement('p');
+        dialCode.className = 'text-sm text-sky-300 font-mono';
+        dialCode.textContent = `Dial code: ${country.dial_code}`;
+
+        const isoCode = document.createElement('p');
+        isoCode.className = 'text-sm text-slate-400 font-mono';
+        isoCode.textContent = `Country code: ${country.code}`;
+
+        content.appendChild(name);
+        content.appendChild(dialCode);
+        content.appendChild(isoCode);
+
+        row.appendChild(img);
+        row.appendChild(content);
+        card.appendChild(row);
+        listEl.appendChild(card);
+      });
+    };
+
+    const loadCountries = async () => {
+      try {
+        const response = await fetch('./countries-local.json');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const countries = await response.json();
+        statusEl.textContent = `${countries.length} countries`;
+        renderCountries(countries);
+      } catch (error) {
+        statusEl.className = 'mb-6 text-sm text-rose-300';
+        statusEl.textContent = `Failed to load countries-local.json: ${error.message}`;
+      }
+    };
+
+    loadCountries();
+  </script>
+</body>
+</html>
