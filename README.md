@@ -99,6 +99,13 @@ Use `countries.json` when:
 - you want to load flags from CDN
 - you do not want to store image assets in your app
 
+Alternative CDN patterns:
+
+- `https://addevin.github.io/country-list-json/country-flag/us.png`
+- `https://flagcdn.com/w320/us.png`
+
+Replace `us` with the lowercase 2-letter country code you need.
+
 Use `countries-local.json` when:
 
 - you want local image files
